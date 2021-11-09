@@ -1,4 +1,4 @@
-service: service # change service name
+service: pupster # change service name
 
 provider:
   name: aws
