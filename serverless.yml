@@ -1,0 +1,45 @@
+service: pupster # change service name
+
+provider:
+  name: aws
+  runtime: go1.x
+  region: us-east-1 #update region
+  iamRoleStatements: # add IAM statements here
+package:
+  exclude:
+    - ./**
+  include:
+    - ./bin/**
+  postPup:
+    handler: bin/interactionsBin
+    events:
+      - http:
+          path: interactions
+          method: POST
+    environment:
+      stage: ${opt:stage, self:provider.stage, 'dev'}
+  eventHandler:
+    handler: bin/eventHandlerBin
+    events:
+      - http:
+          path: events
+          method: POST
+    environment:
+      stage: ${opt:stage, self:provider.stage, 'dev'}
+  authCallback:
+    handler: bin/authCallbackBin
+    events:
+      - http:
+          path: auth_callback
+          method: GET
+    environment:
+      stage: ${opt:stage, self:provider.stage, 'dev'}
+  selectMenu:
+    handler: bin/selectMenuBin
+    events:
+      - http:
+          path: select
+          method: POST
+    environment:
+      stage: ${opt:stage, self:provider.stage, 'dev'}  
+resources: # add resources here
